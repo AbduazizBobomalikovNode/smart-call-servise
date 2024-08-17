@@ -1,0 +1,37 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    meta(http-equiv='X-UA-Compatible' content='ie=edge')
+    title call servis
+    // Font Icon
+    link(rel='stylesheet' href='../assets/fonts/material-icon/css/material-design-iconic-font.min.css')
+    // Main css
+    link(rel='stylesheet' href='../assets/css/login.css')
+  body
+    section.sign-in
+      .container
+        .signin-content
+          .signin-image
+            figure
+              img(src='../assets/images/auth/login_bg4.jpg' alt='sing up image')
+          .signin-form
+            h2.form-title Kirish
+            form(action='/login' method='POST')#login.register-form
+              .form-group
+                label(for='your_name')
+                  i.zmdi.zmdi-account.material-icons-name
+                input#login(type='text' name='login' placeholder='Sizning loginingiz')
+              .form-group
+                label(for='your_pass')
+                  i.zmdi.zmdi-lock
+                input#password(type='password' name='password' placeholder='Sizning parolingiz')
+              .form-group
+                input#remember.agree-term(type='checkbox' name='remember')
+                label.label-agree-term(for='remember')
+                  span
+                    span
+                  | Meni eslab qoling
+              .form-group.form-button
+                input.form-submit(type='submit' name='signin' value='Kirish' style='width: 100%;')

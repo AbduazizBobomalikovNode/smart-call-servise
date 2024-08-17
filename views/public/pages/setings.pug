@@ -1,0 +1,219 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    title Aqilli Qo&apos;ng&apos;iroq - onetechgroup
+    meta(content='width=device-width, initial-scale=1.0', name='viewport')
+    meta(content='smart-call onetechgroup ', name='keywords')
+    meta(content='', name='description')
+    // Favicon
+    link(href='img/favicon.ico', rel='icon')
+    // Google Web Fonts
+    link(rel='preconnect', href='https://fonts.googleapis.com')
+    link(rel='preconnect', href='https://fonts.gstatic.com', crossorigin='')
+    link(href='https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap', rel='stylesheet')
+    // Icon Font Stylesheet
+    link(href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css', rel='stylesheet')
+    link(href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css', rel='stylesheet')
+    // Customized Bootstrap Stylesheet
+    link(href='../client/css/bootstrap.min.css' rel='stylesheet')
+    // Template Stylesheet
+    link(href='../client/css/style.css' rel='stylesheet')
+    style.
+      .dialog-overlay {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      }
+      .dialog-box {
+      width: 60vw;
+      background: white;
+      padding: 20px;
+      padding-top: 0;
+      border-radius: 5px;
+      margin-top: 40px;
+      /* text-align: center; */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .dialog-buttons {
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      }
+      .dialog-buttons button {
+      margin: 0 10px;
+      padding: 10px 20px;
+      }
+  body
+    .container-xxl.position-relative.bg-white.d-flex.p-0
+      // Spinner Start
+      #spinner.show.bg-white.position-fixed.translate-middle.w-100.vh-100.top-50.start-50.d-flex.align-items-center.justify-content-center
+        .spinner-border.text-primary(style='width: 3rem; height: 3rem;', role='status')
+          span.sr-only Loading...
+      // Spinner End
+      // Sidebar Start
+      #nav-open.sidebar.pe-4.pb-3
+        nav.navbar.bg-light.navbar-light
+          a.navbar-brand.mx-4.mb-3(href='#')
+            h3.text-primary
+              i.fa.fa-hashtag.me-2
+              | SMART CALL
+          .d-flex.align-items-center.ms-4.mb-4
+            .position-relative
+              img.rounded-circle(src='../assets/images/faces/face29.png' alt='', style='width: 40px; height: 40px;')
+              .bg-success.rounded-circle.border.border-2.border-white.position-absolute.end-0.bottom-0.p-1
+            .ms-3
+              h6.mb-0 #{user.name}
+              span #{user.role}
+          .navbar-nav.w-100
+            a.nav-item.nav-link(href='/profil')
+              i.fa.fa-tachometer-alt.me-2
+              | Asosiy Sahifa
+            a.nav-item.nav-link.active(href='#')
+              i.fa.bi-gear-fill.me-2
+              | Sozlamalar
+            a.nav-item.nav-link(href='/signout')
+              i.fa.fa-sign-out-alt.me-2
+              | Tizimdan chiqish
+      // Sidebar End
+      // Content Start
+      #content-open.content
+        // Navbar Start
+        nav.navbar.navbar-expand.bg-light.navbar-light.sticky-top.px-4.py-0
+          a.navbar-brand.d-flex.d-lg-none.me-4(href='#')
+            h2.text-primary.mb-0
+              i.fa.fa-hashtag
+          a.sidebar-toggler.flex-shrink-0(href='#')
+            i.fa.fa-bars
+          .navbar-nav.align-items-center.ms-auto
+            .nav-item.dropdown
+              a.nav-link.dropdown-toggle(href='#', data-bs-toggle='dropdown')
+                img.rounded-circle.me-lg-2(src='../assets/images/faces/face29.png', alt='', style='width: 40px; height: 40px;')
+                span.d-none.d-lg-inline-flex #{user.name}
+              .dropdown-menu.dropdown-menu-end.bg-light.border-0.rounded-0.rounded-bottom.m-0
+                a.dropdown-item(href='#') Sozlamalar
+                a.dropdown-item(href='/signout') Tizimdan chiqish
+        // Navbar End
+        // Recent Sales Start
+        .container-fluid.pt-4.px-4
+          .bg-light.text-center.rounded.p-4
+            .row.g-2
+              .col-sm-6.col-xl-4
+                .bg-light.rounded.d-flex.align-items-center.justify-content-between.p-4
+                  img.rounded-circle(src='../assets/images/faces/face29.png', alt='', style='width: 80px; height: 80px;')
+                  .ms-3
+                    p.mb-2
+                    h6.mb-0.text-success
+              .col-sm-6.col-xl-8
+                .bg-light.rounded.d-flex.align-items-center.justify-content-between.p-4
+                  i.fa.fa-3x.text-info
+                  .ms-3
+                    p.mb-2 Ma&apos;lumotlaringizni almashtirgandan keyin
+                    p.mb-2 Saqlash tugmasi orqali saqlab qo&apos;ying
+            .d-flex.align-items-center.justify-content-between.mb-4
+              h6.mb-0 Profil malumotlari
+            .row
+              .col-sm-12.col-xl-12
+                .bg-light.rounded
+                  form(action='/setings/profil',method='post')
+                    .row.mb-3
+                      label.col-sm-2.col-form-label Ism
+                      .col-sm-10
+                        input.form-control(type='text', name='name',value=user.name , placeholder='Ismingizni kiriting...')
+                    .row.mb-3
+                      label.col-sm-2.col-form-label Elektron pochta
+                      .col-sm-10
+                        input.form-control(type='email', name='email',value=user.email , placeholder='Elektron pochta manzilingizni kiriting...')
+                    .row.mb-3
+                      label.col-sm-2.col-form-label Telefon raqam
+                      .col-sm-10
+                        input.form-control(type='phone', disabled='',value=user.phone, name='phone')
+                    .row.mb-3
+                      label.col-sm-6.col-form-label Parolingizni yangilanmoqchimisiz
+                      input.form-check-input#activepassword(type="checkbox")
+                    #password(style="display:none;")
+                        .row.mb-3
+                            label.col-sm-2.col-form-label Oldingi parolingiz
+                            .col-sm-10
+                                input.form-control(type='password' ,id='oldpassword', name='oldpassword',value='////////',placeholder='Oldingi parolingiz kiriting...')
+                        .row.mb-3
+                            label.col-sm-2.col-form-label Yangi parol
+                            .col-sm-10
+                                input.form-control(type='password' ,id='newpassword', name='newpassword',value='////////',placeholder='Yangi parolingizni kiriting...')
+                  
+                    button.btn.btn-primary.m-2(type='submit') Saqlash
+        each val in devices
+            .container-fluid.pt-4.px-4
+                .bg-light.text-center.rounded.p-4
+                    .row.g-2
+                        .col-sm-6.col-xl-4
+                            .bg-light.rounded.d-flex.align-items-center.justify-content-between.p-4
+                            // <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 80px; height: 80px;">
+                            i.fa.fa-bell.fa-3x.text-primary
+                            .ms-3
+                                p.mb-2
+                                h6.mb-0.text-success
+                        .col-sm-6.col-xl-8
+                            .bg-light.rounded.d-flex.align-items-center.justify-content-between.p-4
+                                i.fa.fa-3x.text-info
+                            .ms-3
+                                p.mb-2 Qurilma malumotlarini almashtirgandan keyin
+                                p.mb-2 Saqlash tugmasi orqali saqlab qo&apos;ying
+                                // <h6 class="mb-0"><a class="btn btn-sm btn-primary"  href="">Qo'shish</a></h6>
+                    .d-flex.align-items-center.justify-content-between.mb-4
+                    h6.mb-0 Qurilma malumotlari
+                    .row
+                        .col-sm-12.col-xl-12
+                            .bg-light.rounded
+                                form(action='/setings/device/'+val.id,method='post')
+                                    .row.mb-3
+                                        label.col-sm-2.col-form-label Qurilma nomi
+                                        .col-sm-10
+                                            input.form-control(type='text', name='name',value=val.name, placeholder='Qurilma nomini kiriting...')
+                                    .row.mb-3
+                                        label.col-sm-2.col-form-label Qurilma pin kodi
+                                        .col-sm-10
+                                            input.form-control(type='number', max='99999999', min='0',value=val.pin, name='pin', placeholder='Qurilma pin kodini kiriting...')
+                                    h6.mb-0 Internet tarmog&apos;iga ulanish uchun Wi-fi parol login
+                                    .row.mb-3
+                                        label.col-sm-2.col-form-label Wi-fi nami
+                                        .col-sm-10
+                                            input.form-control(type='text', name='wifi_name',value=val.wifi_name, placeholder='Wi-fi nomi kiriting...')
+                                    .row.mb-3
+                                        label.col-sm-2.col-form-label Wi-fi parol
+                                        .col-sm-10
+                                            input.form-control(type='password', name='wifi_password',value=val.wifi_password, placeholder='Wi-fi parol kiriting...')
+                                    button.btn.btn-primary.m-2(type='submit') Saqlash
+            // Recent Sales End
+        // Footer Start
+        .container-fluid.pt-4.px-4
+          .bg-light.rounded-top.p-4
+            .row
+              .col-12.col-sm-6.text-center.text-sm-start
+                | &copy; 
+                a(href='https://smart-call-school.uz') smart-call-school.uz
+                | , Barcha huquqlar      himoyalangan.
+              .col-12.col-sm-6.text-center.text-sm-end
+                | Jamoa 
+                a(href='onetechgroup.uz') OneTech Group
+                |  Manba 
+                a.border-bottom(href='https://abdusoft.uz/', target='_blank') Abdusoft.uz
+        // Footer End
+      // Content End
+      // Back to Top
+      a.btn.btn-lg.btn-primary.btn-lg-square.back-to-top(href='#')
+        i.bi.bi-arrow-up
+    // JavaScript Libraries
+    script(src='https://code.jquery.com/jquery-3.4.1.min.js')
+    script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js')
+    script(src='../client/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js')
+    // Template Javascript
+    script(src='../client/js/main.js')
+    script(src='../client/js/root.js')

@@ -1,0 +1,251 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    title DASHMIN - Bootstrap Admin Template
+    meta(content='width=device-width, initial-scale=1.0' name='viewport')
+    meta(content='' name='keywords')
+    meta(content='' name='description')
+    // Favicon
+    link(href='img/favicon.ico' rel='icon')
+    // Google Web Fonts
+    link(rel='preconnect' href='https://fonts.googleapis.com')
+    link(rel='preconnect' href='https://fonts.gstatic.com' crossorigin='')
+    link(href='https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap' rel='stylesheet')
+    // Icon Font Stylesheet
+    link(href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css' rel='stylesheet')
+    link(href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css' rel='stylesheet')
+    // Libraries Stylesheet
+    link(href='../client/lib/owlcarousel/assets/owl.carousel.min.css' rel='stylesheet')
+    link(href='../client/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css' rel='stylesheet')
+    // Customized Bootstrap Stylesheet
+    link(href='../client/css/bootstrap.min.css' rel='stylesheet')
+    // Template Stylesheet
+    link(href='../client/css/style.css' rel='stylesheet')
+    style.
+      .dialog-overlay {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      }
+      .dialog-box {
+      width: 60vw;
+      background: white;
+      padding: 20px;
+      padding-top: 0;
+      border-radius: 5px;
+      margin-top: 40px;
+      /* text-align: center; */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .dialog-buttons {
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      }
+      .dialog-buttons button {
+      margin: 0 10px;
+      padding: 10px 20px;
+      }
+  body
+    .container-xxl.position-relative.bg-white.d-flex.p-0
+      // Spinner Start
+      #spinner.show.bg-white.position-fixed.translate-middle.w-100.vh-100.top-50.start-50.d-flex.align-items-center.justify-content-center
+        .spinner-border.text-primary(style='width: 3rem; height: 3rem;' role='status')
+          span.sr-only Loading...
+      // Spinner End
+      // Sidebar Start
+      #nav-open.sidebar.pe-4.pb-3
+        nav.navbar.bg-light.navbar-light
+          a.navbar-brand.mx-4.mb-3(href='/')
+            h3.text-primary
+              i.fa.fa-hashtag.me-2
+              | SMART CALL
+          .d-flex.align-items-center.ms-4.mb-4
+            .position-relative
+              img.rounded-circle(src='../assets/images/faces/face29.png' alt='' style='width: 40px; height: 40px;')
+              .bg-success.rounded-circle.border.border-2.border-white.position-absolute.end-0.bottom-0.p-1
+            .ms-3
+              h6.mb-0 #{user.name}
+              span #{user.role}
+          .navbar-nav.w-100
+            a.nav-item.nav-link.active(href='#')
+              i.fa.fa-tachometer-alt.me-2
+              | Asosiy Sahifa
+            a.nav-item.nav-link(href='/setings')
+              i.fa.bi-gear-fill.me-2
+              | Sozlamalar
+            a.nav-item.nav-link(href='/signout')
+              i.fa.fa-sign-out-alt.me-2
+              | Tizimdan chiqish
+      // Sidebar End
+      // Content Start
+      #content-open.content
+        #dialog.dialog-overlay(style='display: none;')
+          .dialog-box
+            .container-fluid.pt-4.px-4
+              h3#dialog-message.text-secondary.text-center
+              form(method="post")#queryform
+                .row.g-2
+                  .col-sm-12.col-xl-6
+                    .rounded.h-100.p-4
+                      .mb-3
+                        input.form-control(type='name' required='' placeholder='Nomlanishi' name='name')
+                      .mb-3
+                        label.form-label
+                          | Takrorlanishi
+                          | (haftalik)
+                        select.form-select.mb-3#multiselect(required='' name='days' multiple='')
+                          option(disabled='') Ctrl  tugmasini bosib tanlang
+                          option(value='1') Dushanba
+                          option(value='2') Seshanba
+                          option(value='3') Chorshanba
+                          option(value='4') Payshanba
+                          option(value='5') Juma
+                          option(value='6') Shanba
+                      .mb-3.form-check
+                        .form-check.form-switch
+                          input.form-check-input(type='checkbox' role='switch' checked='' name='turn_off_after_work')
+                          label.form-check-label
+                            | Ishlagandan keyin
+                            | o&rsquo;chirish
+                      .mb-3
+                        label.form-label Chalinish vaqti (soat,minut)
+                        input.form-control(type='time' name='time')
+                  .col-sm-12.col-xl-6
+                    .rounded.h-100.p-4
+                      .mb-3
+                        label.form-label Chalinish davomiyligi (sekunt)
+                        input.form-control(type='number' value='5' name='call_duration')
+                      .mb-3
+                        label.form-label Chalininish oralig&rsquo;i (sekunt)
+                        input.form-control(type='number' value='2' name='call_delay')
+                      .mb-3
+                        label.form-label Chalinishlar soni
+                        input.form-control(type='number' value='2' name='count')
+            .dialog-buttons
+              button#dialog-yes.btn.btn-primary.m-2(type='button') Qo&apos;shish
+              button#dialog-no.btn.btn-primary.m-2(type='button') Bekor qilish
+        // Navbar Start
+        nav.navbar.navbar-expand.bg-light.navbar-light.sticky-top.px-4.py-0
+          a.navbar-brand.d-flex.d-lg-none.me-4(href='index.html')
+            h2.text-primary.mb-0
+              i.fa.fa-hashtag
+          a.sidebar-toggler.flex-shrink-0(href='#')
+            i.fa.fa-bars
+          .navbar-nav.align-items-center.ms-auto
+            .nav-item.dropdown
+              a.nav-link.dropdown-toggle(href='#' data-bs-toggle='dropdown')
+                img.rounded-circle.me-lg-2(src='../assets/images/faces/face29.png' alt='' style='width: 40px; height: 40px;')
+                span.d-none.d-lg-inline-flex #{user.name}
+              .dropdown-menu.dropdown-menu-end.bg-light.border-0.rounded-0.rounded-bottom.m-0
+                a.dropdown-item(href='/setings') Sozlamalar
+                a.dropdown-item(href='/signout') Tizimdan chiqish
+        // Navbar End
+        // Recent Sales Start
+        each val in devices
+          .container-fluid.pt-4.px-4
+            .bg-light.text-center.rounded.p-4
+              .row.g-2
+                .col-sm-6.col-xl-4
+                  .bg-light.rounded.d-flex.align-items-center.justify-content-between.p-4
+                    i.fa.fa-bell.fa-3x.text-primary
+                    .ms-3
+                      p.mb-2 #{val.name}
+                      h6.mb-0.text-success
+                        | activ 
+                        i.fa.bi-gear-fill.me-2.text-primary(aria-label='Sozlamalar')
+                .col-sm-6.col-xl-8
+                  .bg-light.rounded.d-flex.align-items-center.justify-content-between.p-4
+                    i.fa.fa-3x.text-white
+                    .ms-3
+                      p.mb-2 Yangi chalinish qo&apos;shish
+                      button#plus.btn.btn-primary.m-2(type='button',value=val.id) Qo&apos;shish
+                      // <h6 class="mb-0"><a class="btn btn-sm btn-primary"  href="">Qo'shish</a></h6>
+              .d-flex.align-items-center.justify-content-between.mb-4
+                h6.mb-0 Qo&apos;ng&apos;iroq Jadvali
+              .table-responsive
+                table.table.text-start.align-middle.table-bordered.table-hover.mb-0
+                  thead
+                    tr.text-dark
+                      // <th scope="col"><input class="form-check-input" type="checkbox"></th>
+                      th(scope='col') Nomi 
+                      th(scope='col') Vaqt
+                      th(scope='col') Faoligi
+                      th(scope='col') Takrorlash
+                      th(scope='col') Chalinish davomiyligi (sekunt)
+                      th(scope='col') Chalininish oralig&rsquo;i (sekunt)
+                      th(scope='col') Chalinishlar soni
+                      th(scope='col') Amallar
+                  tbody
+                    each ring in rings
+                      if (ring.iddevice == val.id)
+                        tr
+                          // <td><input class="form-check-input" type="checkbox"></td>
+                          td #{ring.name}
+                          td #{ring.time}
+                          td
+                            .form-check.form-switch
+                              input(type='text' value=ring.id style='display: none;')
+                              if (ring.isactive)
+                                input#flexSwitchCheckChecked.form-check-input(type='checkbox' role='switch' checked='' name='ch')
+                              else
+                                input#flexSwitchCheckChecked.form-check-input(type='checkbox' role='switch' name='nch')
+
+                          td #{daysFunck(ring.days)}
+                          td #{ring.call_duration}
+                          td #{ring.call_delay}
+                          td #{ring.count}
+                          td
+                            a.btn.btn-sm.btn-danger(href='/api/ring/delete/' + ring.id) O&apos;chirish
+
+        // Footer Start
+        .container-fluid.pt-4.px-4
+          .bg-light.rounded-top.p-4
+            .row
+              .col-12.col-sm-6.text-center.text-sm-start
+                | &copy; 
+                a(href='https://smart-call-school.uz') smart-call-school.uz
+                | , Barcha huquqlar himoyalangan.
+              .col-12.col-sm-6.text-center.text-sm-end
+                | Jamoa 
+                a(href='onetechgroup.uz') OneTech Group
+                |  Manba 
+                a.border-bottom(href='https://abdusoft.uz/' target='_blank') Abdusoft.uz
+        // Footer End
+        // Content End
+        // Back to Top
+        a.btn.btn-lg.btn-primary.btn-lg-square.back-to-top(href='#')
+          i.bi.bi-arrow-up
+    script.
+      function Element_qoshish() {
+      let id = this.value;
+      document.getElementById("nav-open").className += " open";
+      document.getElementById("content-open").className += " open";
+      let tbody  = this.parentElement.parentElement.parentElement.parentElement.parentElement.children[2].children[0].children[1];
+      tasdiqlash("Yangi chalinish qo'shish",id,tbody, function (ha) {
+      if (ha) {
+      console.log("Foydalanuvchi tasdiqladi.");
+      } else {
+      console.log("Foydalanuvchi bekor qildi.");
+      }
+      });
+      }
+      document.querySelectorAll("#plus").forEach(btn => {
+        btn.onclick = Element_qoshish;
+      });
+
+    script(src="../asserts/js/rings_query.js")
+    // JavaScript Libraries
+    script(src='https://code.jquery.com/jquery-3.4.1.min.js')
+    script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js')
+    script(src='../client/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js')
+    // Template Javascript
+    script(src='../client/js/main.js')
