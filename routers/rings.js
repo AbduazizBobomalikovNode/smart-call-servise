@@ -7,8 +7,7 @@ var db = require('../db/mongodb');
 var generateId = require('../resurs/functions/getid');
 const validate = require("../resurs/validate/ring");
 var auth = require("../middlewire/auth");
-var getClientMqtt = require('../resurs/functions/get_mqtt_client');
-var {sendMqtt,receiveMqtt} = require('../resurs/functions/send_recv_mqtt');
+var { receiveMqtt,mqtt_general } = require('../resurs/functions/send_recv_mqtt');
 
 var url = null;
 var getClient = null;
@@ -49,23 +48,28 @@ router.post('/add', auth, async (req, res) => {
     if (ring_int.length > 0) {
         return res.status(400).json({ error: 'ushbu  qiymatlar allaqachon kritilgan' });
     }
-    
-    let _device = await (await db).device.getDevice(body.iddevice);
-   // getClient  = getClientMqtt(url,_device.key,req.user.name,req.user.idbroker);
 
     let ring = {
         id: await generateId(db, 8, "ring"),
         ...body,
-        isactive:true,
-        iduser:req.user.id
+        isactive: true,
+        iduser: req.user.id
     }
 
+    
     let result = await (await db).ring.addRing(ring);
     if (result.hasOwnProperty('error')) {
         return res.status(400).json(
             result
         );
     }
+    let message = {
+        method:"add",
+        data:ring,
+        date: (new Date()).toDateString()
+    }
+    mqtt_general(db,'ring',url,req.user.name,req.user.idbroker,body.iddevice,message);
+    
     console.log(result);
     res.json(
         ring
@@ -79,7 +83,7 @@ router.put('/update/:id', auth, async (req, res) => {
     }
     let body = req.body;
     let id = parseInt(req.params.id);
-    console.log(body,id)
+    console.log(body, id)
 
     if (!id) {
         return res.status(400).json({ error: 'id xato berildi, id butun son qiymat bo\'lishi shart' });
@@ -100,9 +104,8 @@ router.put('/update/:id', auth, async (req, res) => {
     if (ring.length == 0) {
         return res.status(404).json({ error: 'ushbu idga mos chalinish to\'pilmadi!' });
     }
-    let _device = await (await db).device.getDevice(ring.iddevice);
-   // getClient  = getClientMqtt(url,_device.key,req.user.name,req.user.idbroker);
-
+    
+    
     let result = await (await db).ring.update(id, body);
     console.log(result);
     
@@ -111,6 +114,13 @@ router.put('/update/:id', auth, async (req, res) => {
             result
         );
     }
+    let message = {
+        method:"update",
+        data:result,
+        date: (new Date()).toDateString()
+    }
+    mqtt_general(db,'ring',url,req.user.name,req.user.idbroker,ring[0].iddevice,message);
+
     res.json(
         result
     );
@@ -128,11 +138,21 @@ router.get('/delete/:id', auth, async (req, res) => {
     if (ring.length == 0) {
         return res.status(404).json({ error: 'ushbu idga mos chalinish to\'pilmadi!' });
     }
-    let _device = await (await db).device.getDevice(ring.iddevice);
-    //getClient  = getClientMqtt(url,_device.key,req.user.name,req.user.idbroker);
-
+    
     let result = await (await db).ring.delete(id);
-    console.log(result,id);
+    console.log(result, id);
+    let message = {
+        method:"delete",
+        data:{
+            id:id
+        },
+        date: (new Date()).toDateString()
+    }
+    try {
+        mqtt_general(db,'ring',url,req.user.name,req.user.idbroker,ring[0].iddevice,message);
+    } catch (error) {
+        console.log(error);
+    }
     res.send(`<!DOCTYPE html>
         <html lang="en">
         <head>
@@ -158,15 +178,26 @@ router.delete('/delete/:id', auth, async (req, res) => {
     if (ring.length == 0) {
         return res.status(404).json({ error: 'ushbu idga mos chalinish to\'pilmadi!' });
     }
-    let _device = await (await db).device.getDevice(ring.iddevice);
-   // getClient  = getClientMqtt(url,_device.key,req.user.name,req.user.idbroker);
-
-
-    let result = await (await db).device.delete(id);
+    let result = await (await db).ring.delete(id);
+    console.log(result, id);
+    let message = {
+        method:"delete",
+        data:{
+            id:id
+        },
+        date: (new Date()).toDateString()
+    }
+    try {
+        mqtt_general(db,'ring',url,req.user.name,req.user.idbroker,ring[0].iddevice,message);
+    } catch (error) {
+        console.log(error);
+    }
     res.json(
         ring[0]
     );
 })
+
+
 
 
 

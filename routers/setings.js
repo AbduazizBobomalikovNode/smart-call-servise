@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require('bcrypt');
 var db = require('../db/mongodb');
+var { receiveMqtt, mqtt_general } = require('../resurs/functions/send_recv_mqtt');
+
+var url = null;
 
 const jwt = require('jsonwebtoken');
 
@@ -13,7 +16,7 @@ const validateDevice = require("../resurs/validate/device");
 
 var auth = require("../middlewire/auth");
 
-setTimeout(async () => { db = await db }, 100);
+setTimeout(async () => { db = await db; url = await (await db).getUrl(); }, 100);
 
 
 router.get('/', auth, async (req, res) => {
@@ -23,6 +26,54 @@ router.get('/', auth, async (req, res) => {
         user: req.user
     })
 });
+
+router.put('/api/user', auth, async (req, res) => {
+    console.log("api :", req.body, req.body.hasOwnProperty("name"))
+    const { error } = validateProfil(req.body, "api");
+    if (error) {
+        return res.status(400).json(
+            { error: error.details[0].message }
+        )
+    }
+    let body = req.body;
+    let id = req.user.id;
+    let is_sent_mqtt_login = false;
+    let result = await (await db).user.update(id, body);
+    if (result.hasOwnProperty('error')) {
+        return res.status(400).json(
+            result
+        );
+    }
+    if (body.hasOwnProperty("name")) {
+        req.user.name = req.body.name;
+    }
+    if (body.hasOwnProperty("email")) {
+        req.user.email = req.body.email;
+        is_sent_mqtt_login = true;
+    }
+    if (is_sent_mqtt_login) {
+        let data = {
+            password: false,
+            login: is_sent_mqtt_login,
+            device_login: req.user.email
+        };
+        let message = {
+            type: "user",
+            data: data,
+            date: (new Date()).toDateString()
+        }
+        try {
+            mqtt_general(db, 'seting', url, req.user.name, req.user.idbroker, id, message);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    const token = jwt.sign({ ...req.user }, jwt_my_key);
+    return res.header('x-web-token', token).status(200).json(
+        { info: 'ma\'lumotlar mufaqiyatli tahrirlandi.' }
+    );
+
+})
 
 router.post('/profil', auth, async (req, res) => {
     console.log(req.body, req.body.hasOwnProperty("name"))
@@ -36,12 +87,15 @@ router.post('/profil', auth, async (req, res) => {
     }
     let user = {};
     let body = req.body;
+    let is_sent_mqtt_password = false;
+    let is_sent_mqtt_login = false;
     if (body.hasOwnProperty("oldpassword") && body.hasOwnProperty("newpassword")) {
         if (body.newpassword != '////////' && body.oldpassword != '////////') {
             user = {
                 password: req.body.newpassword,
             };
             req.user.password = req.body.newpassword;
+            is_sent_mqtt_password = true;
         }
     }
     if (body.hasOwnProperty("name")) {
@@ -51,6 +105,7 @@ router.post('/profil', auth, async (req, res) => {
     if (body.hasOwnProperty("email")) {
         user.email = req.body.email;
         req.user.email = req.body.email;
+        is_sent_mqtt_login = true;
     }
 
     let id = req.user.id;
@@ -75,7 +130,29 @@ router.post('/profil', auth, async (req, res) => {
             result
         );
     }
-
+    if (is_sent_mqtt_password || is_sent_mqtt_login) {
+        let data = {
+            password: is_sent_mqtt_password,
+            login: is_sent_mqtt_login
+        };
+        if (is_sent_mqtt_password) {
+            data.hostpot_password = body.newpassword;
+        }
+        if (is_sent_mqtt_login) {
+            data.device_login = req.user.email;
+        }
+        let message = {
+            type: "user",
+            data: data,
+            date: (new Date()).toDateString()
+        }
+        try {
+            mqtt_general(db, 'seting', url, req.user.name, req.user.idbroker, id, message);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    console.log(result);
 
     const token = jwt.sign({ ...req.user }, jwt_my_key);
     if (result) {
@@ -164,6 +241,57 @@ router.post('/profil', auth, async (req, res) => {
 });
 
 
+router.put('/api/device/:id', auth, async (req, res) => {
+    console.log("api :", req.body, req.body.hasOwnProperty("name"))
+    const { error } = validateDevice(req.body, "api", "");
+    if (error) {
+        return res.status(400).json(
+            { error: error.details[0].message }
+        )
+    }
+    let body = req.body;
+    let id = Number(req.params.id);
+    let device = await (await db).device.getDevice(id);
+    if (!device) {
+        return res.status(404).json({
+            error: 'ushbu idga mos qurilma to\'pilmadi!'
+        });
+    }
+
+    if (body.hasOwnProperty("name")) {
+        let result = await (await db).device.getDeviceForObj({ name: body.name, iduser: req.user.id });
+        if (result.length > 0) {
+            return res.status(404).json({
+                error: 'ushbu nomda boshqa qurilmangiz mavchud!'
+            });
+        }
+    }
+
+    let result = await (await db).device.update(id, body);
+    if (result.hasOwnProperty('error')) {
+        return res.status(400).json({
+            error: JSON.stringify(result)
+        });
+    }
+
+    let message = {
+        type: "device",
+        device: id,
+        data: result,
+        date: (new Date()).toDateString()
+    }
+    try {
+        mqtt_general(db, 'seting', url, req.user.name, req.user.idbroker, id, message);
+    } catch (error) {
+        console.error(error);
+    }
+    console.log(result);
+
+
+    return res.status(201).json(result);
+
+})
+
 router.post('/device/:id', auth, async (req, res) => {
     const { error } = validateDevice(req.body, "", "");
     if (error) {
@@ -181,11 +309,11 @@ router.post('/device/:id', auth, async (req, res) => {
     if (!device) {
         return res.render('public/pages/erors/error-404', {
             status: 404,
-            error: 'ushbu idga mos vazifa to\'pilmadi!',
+            error: 'ushbu idga mos qurilma to\'pilmadi!',
             path: '/setings'
         });
     }
-    if (body.hasOwnProperty("name")) {
+    if (body.name != device.name) {
         let result = await (await db).device.getDeviceForObj({ name: body.name, iduser: req.user.id });
         if (result.length > 0) {
             return res.render('public/pages/erors/error-404', {
@@ -204,7 +332,19 @@ router.post('/device/:id', auth, async (req, res) => {
             path: '/setings'
         });
     }
+    let message = {
+        type: "device",
+        device: id,
+        data: result,
+        date: (new Date()).toDateString()
+    }
+    try {
+        mqtt_general(db, 'seting', url, req.user.name, req.user.idbroker, id, message);
+    } catch (error) {
+        console.error(error);
+    }
     console.log(result);
+
     res.send(`<!DOCTYPE html>
     <html lang="en">
     <head>

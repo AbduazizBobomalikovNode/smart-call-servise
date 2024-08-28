@@ -2,7 +2,7 @@ var ringId = 0;
 document.querySelectorAll("#flexSwitchCheckChecked").forEach(btn => {
     btn.onclick = (evnt) => {
         ringId = evnt.target.parentElement.children[0].value;
-
+        console.log("#flexSwitchCheckChecked :" + ringId);
         let value = true;
         if (evnt.target.checked) {
             value = true;

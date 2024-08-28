@@ -4,7 +4,7 @@ function Validate(xabar, method,role) {
     const sxema1 = Joi.object({
         name: Joi.string().min(3).max(50).required(),
         pin: Joi.number().required(),
-        key: Joi.string().min(3).max(50).required(),
+        key: Joi.string().min(3).max(50).required(), // broker emailli   
         wifi_name: Joi.string().min(3).max(50).required(),
         wifi_password: Joi.string().min(3).max(150).required(),
     });
@@ -24,6 +24,13 @@ function Validate(xabar, method,role) {
             wifi_name: Joi.string().min(3).max(50),
             wifi_password: Joi.string().min(3).max(150),
         });
+
+        if (method == "api") {
+            return Joi.object({
+                name: Joi.string().min(3).max(50),
+                pin: Joi.number()
+            }).validate(xabar);
+        }
     }
 
     if (method == 'add')

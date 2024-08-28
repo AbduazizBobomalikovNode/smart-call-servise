@@ -14,7 +14,7 @@ function Validate(xabar, method) {
         email: Joi.string().min(3).max(45),
         password: Joi.string().min(6).max(150),
         idrole: Joi.number(),
-        idbroker: Joi.number().required(),
+        idbroker: Joi.number(),
     });
 
     if (method == 'add')

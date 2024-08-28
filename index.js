@@ -3,7 +3,7 @@ const cookieParser = require("cookie-parser");
 var auth = require("./middlewire/auth");
 
 // var document = require("./middlewire/document");
-const port = 5000; // yoki istalgan boshqa port
+const port = 3000; // yoki istalgan boshqa port
 const app = express();
 
 
@@ -36,6 +36,17 @@ app.use('/api/RHT', RHTRouter)
 app.use('/device', deviceRouter)
 app.use('/api/ring', rigsRouter)
 
+app.use('/profil/api', auth, async (req, res, next) => {
+  let user_id = req.user.id;
+  let devices = await (await db).device.getDeviceForObj({ iduser: user_id });
+  let rings = await (await db).ring.getRingForObj({ iduser: user_id });
+  res.status(200).json(
+    {
+      user: req.user,
+      devices: devices,
+      rings: rings
+    });
+})
 
 app.use('/profil', auth, async (req, res, next) => {
   let user_id = req.user.id;
@@ -48,12 +59,12 @@ app.use('/profil', auth, async (req, res, next) => {
       devices: devices,
       rings: rings,
       daysFunck: function (arr) {
-        const daysMap = {1: 'DSH',2: 'SSh',3: 'CHR',4: 'PAY',5: 'JU',6: 'SHN'   };
+        const daysMap = { 1: 'DSH', 2: 'SSh', 3: 'CHR', 4: 'PAY', 5: 'JU', 6: 'SHN' };
         if (arr.length === 6 && arr.every(day => day >= 1 && day <= 6)) {
-            return 'HAR KUN';
+          return 'HAR KUN';
         }
         return arr.map(day => daysMap[day]).join(', ');
-    }
+      }
     })
 })
 
