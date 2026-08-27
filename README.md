@@ -4,6 +4,8 @@ IoT tugmalardan kelgan chaqiruvni vazifaga aylantiradigan va uni mas'ul xodimga 
 
 Kasalxona palatasi, mehmonxona xonasi yoki zavod sexida odam yordam so'ramoqchi bo'lganda tugmani bosadi. Tizim signalni qabul qiladi, kimga tegishli ekanini aniqlaydi va vazifa ochadi. Kim javob berdi, qancha vaqtda bajardi — hammasi yozib boriladi.
 
+**Sahifa:** [abduazizbobomalikovnode.github.io/smart-call-servise/](https://abduazizbobomalikovnode.github.io/smart-call-servise/)
+
 > Bu diplom ishi doirasida yozilgan. Ikkinchi, soddalashtirilgan versiyasi: [system-smart-call-v2](https://github.com/AbduazizBobomalikovNode/system-smart-call-v2)
 
 ---
