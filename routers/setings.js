@@ -8,7 +8,7 @@ var url = null;
 
 const jwt = require('jsonwebtoken');
 
-const jwt_my_key = process.env.JWT_MY_KEY || "***OLIB-TASHLANDI***";
+const jwt_my_key = process.env.JWT_MY_KEY;
 
 var generateId = require('../resurs/functions/getid');
 const validateProfil = require("../resurs/validate/profil");
