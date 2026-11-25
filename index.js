@@ -98,10 +98,31 @@ app.get('/', auth, async (req, res) => {
   const actions = await (await db).action.getActionAll();
   // const static = await (await db).static.getStatic();
   let static = {};
+  // Faqat o'qish: boshqaruv panelidagi umumiy ko'rsatkichlar
+  let stats = { devices: 0, ringsTotal: 0, ringsActive: 0, today: [], nextRing: null, deviceNames: {}, modules: {} };
+  try {
+    const rings = await (await db).ring.getRingForObj({ iduser: req.user.id });
+    const devices = await (await db).device.getDeviceForObj({ iduser: req.user.id });
+    const now = new Date();
+    const hhmm = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+    devices.forEach(d => { stats.deviceNames[d.id] = d.name; });
+    stats.devices = devices.length;
+    stats.ringsTotal = rings.length;
+    stats.ringsActive = rings.filter(r => r.isactive).length;
+    stats.today = rings
+      .filter(r => r.isactive && Array.isArray(r.days) && r.days.includes(now.getDay()))
+      .sort((a, b) => String(a.time).localeCompare(String(b.time)))
+      .map(r => ({ ...r, done: String(r.time) < hhmm }));
+    stats.nextRing = stats.today.find(r => !r.done) || null;
+    actions.forEach(a => { stats.modules[a.module] = (stats.modules[a.module] || 0) + 1; });
+  } catch (err) {
+    console.error('statistika hisoblanmadi:', err);
+  }
   res.render('public/index', {
     static: static,
     user: req.user,
-    actions: actions
+    actions: actions,
+    stats: stats
   }); // 'login.pug' faylini ishlatish
 });
 // Login sahifasi uchun GET tarmoq so'rovini qo'llash

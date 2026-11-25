@@ -4,7 +4,7 @@ html(lang='en')
     // Required meta tags
     meta(charset='utf-8')
     meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
-    title Abdusoft
+    title Smart Call Service
     // plugins:css
     link(rel='stylesheet', href='../../assets/vendors/mdi/css/materialdesignicons.min.css')
     link(rel='stylesheet', href='../../assets/vendors/css/vendor.bundle.base.css')
@@ -19,8 +19,9 @@ html(lang='en')
     // endinject
     // Layout styles
     link(rel='stylesheet', href='../../assets/css/style.css')
+    link(rel='stylesheet', href='../../assets/css/smartcall.css')
     // End layout styles
-    link(rel='shortcut icon', href='../../assets/images/favicon.png')
+    link(rel='shortcut icon', href='../../assets/images/favicon-smartcall.svg')
     script.
       window.onload = function () {
       let title = document.title + " ✅";
@@ -45,21 +46,21 @@ html(lang='en')
       nav#sidebar.sidebar.sidebar-offcanvas
         .sidebar-brand-wrapper.d-none.d-lg-flex.align-items-center.justify-content-center.fixed-top
           a.sidebar-brand.brand-logo(href='/')
-            img(src='../../assets/images/logo.svg', alt='logo')
+            img(src='../../assets/images/smartcall-logo.svg', alt='logo')
           a.sidebar-brand.brand-logo-mini(href='/')
-            img(src='../../assets/images/logo-mini.svg', alt='logo')
+            img(src='../../assets/images/smartcall-mark.svg', alt='logo')
         ul.nav
           li.nav-item.profile
             .profile-desc
               .profile-pic
                 .count-indicator
-                  img.img-xs.rounded-circle(src='../../assets/images/faces/face31.png', alt='')
+                  span.sc-avatar #{(user && user.name ? user.name : "?").charAt(0).toUpperCase()}
                   span.count.bg-success
                 .profile-name
                   h5.mb-0.font-weight-normal #{user.name}
                   span #{user.role}
           li.nav-item.nav-category
-            span.nav-link Navigation
+            span.nav-link Bo&apos;limlar
           li.nav-item.menu-items
             a.nav-link(href='/')
               span.menu-icon
@@ -87,7 +88,7 @@ html(lang='en')
                     a.nav-link(href='/device')
                       span.menu-icon
                         i.mdi.mdi-memory
-                      span.menu-title qurilmalar
+                      span.menu-title Qurilmalar
             
       // partial
       .container-fluid.page-body-wrapper
@@ -95,7 +96,7 @@ html(lang='en')
         nav.navbar.p-0.fixed-top.d-flex.flex-row
           .navbar-brand-wrapper.d-flex.d-lg-none.align-items-center.justify-content-center
             a.navbar-brand.brand-logo-mini(href='/')
-              img(src='../../assets/images/logo-mini.svg', alt='logo')
+              img(src='../../assets/images/smartcall-mark.svg', alt='logo')
           .navbar-menu-wrapper.flex-grow.d-flex.align-items-stretch
             button.navbar-toggler.navbar-toggler.align-self-center(type='button', data-toggle='minimize')
               span.mdi.mdi-menu
@@ -103,7 +104,7 @@ html(lang='en')
               li.nav-item.dropdown
                 a#profileDropdown.nav-link(href='#', data-toggle='dropdown')
                   .navbar-profile
-                    img.img-xs.rounded-circle(src='../../assets/images/faces/face31.png', alt='')
+                    span.sc-avatar #{(user && user.name ? user.name : "?").charAt(0).toUpperCase()}
                     p.mb-0.d-none.d-sm-block.navbar-profile-name #{user.name}
                     i.mdi.mdi-menu-down.d-none.d-sm-block
                 .dropdown-menu.dropdown-menu-right.navbar-dropdown.preview-list(aria-labelledby='profileDropdown')

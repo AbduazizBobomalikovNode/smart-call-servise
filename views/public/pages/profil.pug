@@ -2,12 +2,12 @@ doctype html
 html(lang='en')
   head
     meta(charset='utf-8')
-    title DASHMIN - Bootstrap Admin Template
+    title Smart Call Service
     meta(content='width=device-width, initial-scale=1.0' name='viewport')
     meta(content='' name='keywords')
     meta(content='' name='description')
     // Favicon
-    link(href='img/favicon.ico' rel='icon')
+    link(href='../assets/images/favicon-smartcall.svg' rel='icon')
     // Google Web Fonts
     link(rel='preconnect' href='https://fonts.googleapis.com')
     link(rel='preconnect' href='https://fonts.gstatic.com' crossorigin='')
@@ -22,6 +22,7 @@ html(lang='en')
     link(href='../client/css/bootstrap.min.css' rel='stylesheet')
     // Template Stylesheet
     link(href='../client/css/style.css' rel='stylesheet')
+    link(href='../assets/css/smartcall.css' rel='stylesheet')
     style.
       .dialog-overlay {
       position: fixed;
@@ -66,11 +67,11 @@ html(lang='en')
         nav.navbar.bg-light.navbar-light
           a.navbar-brand.mx-4.mb-3(href='/')
             h3.text-primary
-              i.fa.fa-hashtag.me-2
-              | SMART CALL
+              img.me-2(src='../assets/images/smartcall-mark.svg', alt='', style='width:28px;height:28px;vertical-align:-7px')
+              | Smart Call
           .d-flex.align-items-center.ms-4.mb-4
             .position-relative
-              img.rounded-circle(src='../assets/images/faces/face29.png' alt='' style='width: 40px; height: 40px;')
+              span.sc-avatar #{(user && user.name ? user.name : "?").charAt(0).toUpperCase()}
               .bg-success.rounded-circle.border.border-2.border-white.position-absolute.end-0.bottom-0.p-1
             .ms-3
               h6.mb-0 #{user.name}
@@ -125,7 +126,7 @@ html(lang='en')
                         label.form-label Chalinish davomiyligi (sekunt)
                         input.form-control(type='number' value='5' name='call_duration')
                       .mb-3
-                        label.form-label Chalininish oralig&rsquo;i (sekunt)
+                        label.form-label Chalinish oralig&rsquo;i (sekunt)
                         input.form-control(type='number' value='2' name='call_delay')
                       .mb-3
                         label.form-label Chalinishlar soni
@@ -143,7 +144,7 @@ html(lang='en')
           .navbar-nav.align-items-center.ms-auto
             .nav-item.dropdown
               a.nav-link.dropdown-toggle(href='#' data-bs-toggle='dropdown')
-                img.rounded-circle.me-lg-2(src='../assets/images/faces/face29.png' alt='' style='width: 40px; height: 40px;')
+                span.sc-avatar(style="width:40px;height:40px")  #{(user && user.name ? user.name : "?").charAt(0).toUpperCase()}
                 span.d-none.d-lg-inline-flex #{user.name}
               .dropdown-menu.dropdown-menu-end.bg-light.border-0.rounded-0.rounded-bottom.m-0
                 a.dropdown-item(href='/setings') Sozlamalar
@@ -160,7 +161,7 @@ html(lang='en')
                     .ms-3
                       p.mb-2 #{val.name}
                       h6.mb-0.text-success
-                        | activ 
+                        | faol
                         i.fa.bi-gear-fill.me-2.text-primary(aria-label='Sozlamalar')
                 .col-sm-6.col-xl-8
                   .bg-light.rounded.d-flex.align-items-center.justify-content-between.p-4
@@ -179,9 +180,9 @@ html(lang='en')
                       th(scope='col') Nomi 
                       th(scope='col') Vaqt
                       th(scope='col') Faoligi
-                      th(scope='col') Takrorlash
+                      th(scope='col') Takrorlanish
                       th(scope='col') Chalinish davomiyligi (sekunt)
-                      th(scope='col') Chalininish oralig&rsquo;i (sekunt)
+                      th(scope='col') Chalinish oralig&rsquo;i (sekunt)
                       th(scope='col') Chalinishlar soni
                       th(scope='col') Amallar
                   tbody

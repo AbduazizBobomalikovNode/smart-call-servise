@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 214 40" width="214" height="40" role="img" aria-label="Smart Call Service">
+  <rect width="40" height="40" rx="10" fill="#14b8a6"/>
+  <g transform="translate(7.5 6.5) scale(1.05)" fill="#06201e">
+    <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+  </g>
+  <text x="52" y="19" font-family="Segoe UI, system-ui, -apple-system, Arial, sans-serif" font-size="17" font-weight="700" fill="#ffffff" letter-spacing="0.2">Smart Call</text>
+  <text x="52" y="34" font-family="Segoe UI, system-ui, -apple-system, Arial, sans-serif" font-size="11" font-weight="500" fill="#7fe3d8" letter-spacing="2.4">SERVICE</text>
+</svg>

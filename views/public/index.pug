@@ -4,7 +4,7 @@ html(lang='en')
     // Required meta tags
     meta(charset='utf-8')
     meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
-    title Abdusoft
+    title Smart Call Service
     // plugins:css
     link(rel='stylesheet', href='assets/vendors/mdi/css/materialdesignicons.min.css')
     link(rel='stylesheet', href='assets/vendors/css/vendor.bundle.base.css')
@@ -19,23 +19,24 @@ html(lang='en')
     // endinject
     // Layout styles
     link(rel='stylesheet', href='assets/css/style.css')
+    link(rel='stylesheet', href='assets/css/smartcall.css')
     // End layout styles
-    link(rel='shortcut icon', href='assets/images/favicon.png')
+    link(rel='shortcut icon', href='assets/images/favicon-smartcall.svg')
   body
     .container-scroller
       // partial:partials/_sidebar.html
       nav#sidebar.sidebar.sidebar-offcanvas
         .sidebar-brand-wrapper.d-none.d-lg-flex.align-items-center.justify-content-center.fixed-top
           a.sidebar-brand.brand-logo(href='/')
-            img(src='assets/images/logo.svg', alt='logo')
+            img(src='assets/images/smartcall-logo.svg', alt='logo')
           a.sidebar-brand.brand-logo-mini(href='/')
-            img(src='assets/images/logo-mini.svg', alt='logo')
+            img(src='assets/images/smartcall-mark.svg', alt='logo')
         ul.nav
           li.nav-item.profile
             .profile-desc
               .profile-pic
                 .count-indicator
-                  img.img-xs.rounded-circle(src='./assets/images/faces/face31.png', alt='')
+                  span.sc-avatar #{(user && user.name ? user.name : "?").charAt(0).toUpperCase()}
                   span.count.bg-success
                 .profile-name
                   h5.mb-0.font-weight-normal #{user.name}
@@ -70,7 +71,7 @@ html(lang='en')
               a.nav-link(href='/device')
                 span.menu-icon
                   i.mdi.mdi-memory
-                span.menu-title qurilmalar
+                span.menu-title Qurilmalar
           
       // partial
       .container-fluid.page-body-wrapper
@@ -78,7 +79,7 @@ html(lang='en')
         nav.navbar.p-0.fixed-top.d-flex.flex-row
           .navbar-brand-wrapper.d-flex.d-lg-none.align-items-center.justify-content-center
             a.navbar-brand.brand-logo-mini(href='/')
-              img(src='./assets/images/logo-mini.svg', alt='logo')
+              img(src='./assets/images/smartcall-mark.svg', alt='logo')
           .navbar-menu-wrapper.flex-grow.d-flex.align-items-stretch
             button.navbar-toggler.navbar-toggler.align-self-center(type='button', data-toggle='minimize')
               span.mdi.mdi-menu
@@ -86,7 +87,7 @@ html(lang='en')
               li.nav-item.dropdown
                 a#profileDropdown.nav-link(href='#', data-toggle='dropdown')
                   .navbar-profile
-                    img.img-xs.rounded-circle(src='./assets/images/faces/face31.png', alt='')
+                    span.sc-avatar #{(user && user.name ? user.name : "?").charAt(0).toUpperCase()}
                     p.mb-0.d-none.d-sm-block.navbar-profile-name #{user.name}
                     i.mdi.mdi-menu-down.d-none.d-sm-block
                 .dropdown-menu.dropdown-menu-right.navbar-dropdown.preview-list(aria-labelledby='profileDropdown')
@@ -111,77 +112,91 @@ html(lang='en')
         // partial
         .main-panel
           .content-wrapper
+            .sc-page-head
+              div
+                h1.sc-page-title Asosiy panel
+                p.sc-page-sub #{new Date().toLocaleDateString('uz-UZ', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+              if stats && stats.nextRing
+                .sc-next
+                  span.sc-next-label Keyingi qo&apos;ng&apos;iroq
+                  strong.sc-num #{stats.nextRing.time}
+                  span.sc-next-name #{stats.nextRing.name}
+            .row.sc-kpis
+              .col-xl-3.col-sm-6.grid-margin.stretch-card
+                .card.sc-kpi
+                  .card-body
+                    .sc-kpi-icon: i.mdi.mdi-bell-ring-outline
+                    .sc-kpi-value.sc-num #{stats.today.length}
+                    .sc-kpi-label Bugungi qo&apos;ng&apos;iroqlar
+                    .sc-kpi-note #{stats.today.filter(function (r) { return r.done; }).length} tasi o&apos;tdi, #{stats.today.filter(function (r) { return !r.done; }).length} tasi kutilmoqda
+              .col-xl-3.col-sm-6.grid-margin.stretch-card
+                .card.sc-kpi
+                  .card-body
+                    .sc-kpi-icon: i.mdi.mdi-calendar-check
+                    .sc-kpi-value.sc-num #{stats.ringsActive}
+                      span.sc-kpi-of  / #{stats.ringsTotal}
+                    .sc-kpi-label Faol jadvallar
+                    .sc-kpi-note #{stats.ringsTotal - stats.ringsActive} tasi o&apos;chirilgan
+              .col-xl-3.col-sm-6.grid-margin.stretch-card
+                .card.sc-kpi
+                  .card-body
+                    .sc-kpi-icon: i.mdi.mdi-memory
+                    .sc-kpi-value.sc-num #{stats.devices}
+                    .sc-kpi-label Qurilmalar
+                    .sc-kpi-note Hisobingizga ulangan
+              .col-xl-3.col-sm-6.grid-margin.stretch-card
+                .card.sc-kpi
+                  .card-body
+                    .sc-kpi-icon: i.mdi.mdi-history
+                    .sc-kpi-value.sc-num #{actions.length}
+                    .sc-kpi-label Bugungi harakatlar
+                    .sc-kpi-note Tizim jurnalidan
             .row
-              .col-xl-3.col-sm-6.grid-margin.stretch-card
+              .col-lg-5.grid-margin.stretch-card
                 .card
                   .card-body
-                    .row
-                      .col-9
-                        .d-flex.align-items-center.align-self-start
-                          h3.mb-0 #{static?static.add?static.add:0:0}
-                      .col-3
-                        .icon.icon-box-success
-                          span.mdi.mdi-arrow-top-right.icon-item
-                    h6.text-muted.font-weight-normal Yaratilgan Hujjatlar
-              .col-xl-3.col-sm-6.grid-margin.stretch-card
+                    h4.card-title Bugungi jadval
+                    if stats.today.length
+                      ul.sc-timeline
+                        each r in stats.today
+                          li(class=r.done ? 'is-done' : (stats.nextRing && stats.nextRing.id === r.id ? 'is-next' : ''))
+                            span.sc-time.sc-num #{r.time}
+                            span.sc-tl-body
+                              strong #{r.name}
+                              small #{stats.deviceNames[r.iddevice] || 'Qurilma'}
+                            if r.done
+                              span.badge.sc-badge.sc-badge-muted O&apos;tdi
+                            else if stats.nextRing && stats.nextRing.id === r.id
+                              span.badge.sc-badge.sc-badge-accent Keyingi
+                            else
+                              span.badge.sc-badge.sc-badge-info Kutilmoqda
+                    else
+                      p.sc-empty Bugun uchun faol qo&apos;ng&apos;iroq yo&apos;q.
+              .col-lg-7.grid-margin.stretch-card
                 .card
                   .card-body
-                    .row
-                      .col-9
-                        .d-flex.align-items-center.align-self-start
-                          h3.mb-0 #{static?static.update?static.update:0:0}
-                      .col-3
-                        .icon.icon-box-success
-                          span.mdi.mdi-arrow-top-right.icon-item
-                    h6.text-muted.font-weight-normal Tasdiqlanga  Hujjatlar
-              .col-xl-3.col-sm-6.grid-margin.stretch-card
-                .card
-                  .card-body
-                    .row
-                      .col-9
-                        .d-flex.align-items-center.align-self-start
-                          h3.mb-0 #{static?static.delete?static.delete:0:0}
-                      .col-3
-                        .icon.icon-box-danger
-                          span.mdi.mdi-arrow-bottom-left.icon-item
-                    h6.text-muted.font-weight-normal Bekor qilingan hujjatlar  
-              .col-xl-3.col-sm-6.grid-margin.stretch-card
-                .card
-                  .card-body
-                    .row
-                      .col-9
-                        .d-flex.align-items-center.align-self-start
-                          h3.mb-0 #{static?static.view?static.view:0:0}
-                      .col-3
-                        .icon.icon-box-success
-                          span.mdi.mdi-arrow-top-right.icon-item
-                    h6.text-muted.font-weight-normal Hujjatlarni Ko'rishlar
-            
-            .row
-              .col-12.grid-margin
-                .card
-                  .card-body
-                    h4.card-title Kuzatilgan holatlar
-                    .table-responsive
+                    h4.card-title Bugungi harakatlar
+                    .table-responsive.sc-scroll
                       table.table
                         thead
                           tr
-                            th  № 
-                            th  Xodim 
-                            th  Bo'lim 
-                            th  Tafsif 
-                            th  Sana 
-                            th  Vaqt
+                            th &numero;
+                            th Xodim
+                            th Bo&apos;lim
+                            th Tafsif
+                            th Vaqt
                         tbody
                           - for (var x = 0; x < actions.length; x++)
-                            tr 
-                              td #{x+1}
+                            tr
+                              td.sc-num #{x+1}
                               td #{actions[x].user}
-                              td #{actions[x].module}
-                              td(style="width:30%;") #{actions[x].description}
-                              td #{actions[x].date}
-                              td #{actions[x].time}
-                          
+                              td
+                                span.badge.sc-badge.sc-badge-info #{actions[x].module}
+                              td #{actions[x].description}
+                              td.sc-num #{String(actions[x].time).replace(/:$/, '')}
+                          if !actions.length
+                            tr
+                              td(colspan=5).sc-empty Bugun harakatlar yo&apos;q
           // content-wrapper ends
           // partial:partials/_footer.html
           footer.footer

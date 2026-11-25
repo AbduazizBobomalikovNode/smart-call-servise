@@ -167,7 +167,7 @@ router.post('/profil', auth, async (req, res) => {
                     <head>
                         <meta charset="UTF-8">
                         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                        <title> Abdusoft</title>
+                        <title>Smart Call Service</title>
                         <script>
                             setTimeout(()=>{window.location.href = '/setings';},1000);
                         </script>

@@ -22,8 +22,9 @@ html(lang='en')
     // endinject
     // Layout styles
     link(rel='stylesheet', href=path+'../assets/css/style.css')
+    link(rel='stylesheet', href=path+'../assets/css/smartcall.css')
     // End layout styles
-    link(rel='shortcut icon', href=path+'../assets/images/favicon.png')
+    link(rel='shortcut icon', href=path+'../assets/images/favicon-smartcall.svg')
     script.
       window.onload = function () {
       let title = document.title + " ✅";
@@ -41,21 +42,21 @@ html(lang='en')
       nav#sidebar.sidebar.sidebar-offcanvas
         .sidebar-brand-wrapper.d-none.d-lg-flex.align-items-center.justify-content-center.fixed-top
           a.sidebar-brand.brand-logo(href='/')
-            img(src=path+'../assets/images/logo.svg', alt='logo')
+            img(src=path+'../assets/images/smartcall-logo.svg', alt='logo')
           a.sidebar-brand.brand-logo-mini(href='/')
-            img(src=path+'../assets/images/logo-mini.svg', alt='logo')
+            img(src=path+'../assets/images/smartcall-mark.svg', alt='logo')
         ul.nav
           li.nav-item.profile
             .profile-desc
               .profile-pic
                 .count-indicator
-                  img.img-xs.rounded-circle(src=path+'../assets/images/faces/face31.png', alt='')
+                  span.sc-avatar #{(user && user.name ? user.name : "?").charAt(0).toUpperCase()}
                   span.count.bg-success
                 .profile-name
                   h5.mb-0.font-weight-normal #{user.name}
                   span #{user.role}
           li.nav-item.nav-category
-            span.nav-link Navigation
+            span.nav-link Bo&apos;limlar
           li.nav-item.menu-items
             a.nav-link(href='/')
               span.menu-icon
@@ -84,14 +85,14 @@ html(lang='en')
               a.nav-link(href='/device')
                 span.menu-icon
                   i.mdi.mdi-memory
-                span.menu-title qurilmalar
+                span.menu-title Qurilmalar
          
       .container-fluid.page-body-wrapper
         // partial:partials/_navbar.html
         nav.navbar.p-0.fixed-top.d-flex.flex-row
           .navbar-brand-wrapper.d-flex.d-lg-none.align-items-center.justify-content-center
             a.navbar-brand.brand-logo-mini(href='/')
-              img(src=path+'../assets/images/logo-mini.svg', alt='logo')
+              img(src=path+'../assets/images/smartcall-mark.svg', alt='logo')
           .navbar-menu-wrapper.flex-grow.d-flex.align-items-stretch
             button.navbar-toggler.navbar-toggler.align-self-center(type='button', data-toggle='minimize')
               span.mdi.mdi-menu
@@ -99,7 +100,7 @@ html(lang='en')
               li.nav-item.dropdown
                 a#profileDropdown.nav-link(href='#', data-toggle='dropdown')
                   .navbar-profile
-                    img.img-xs.rounded-circle(src=path+'../assets/images/faces/face31.png', alt='')
+                    span.sc-avatar #{(user && user.name ? user.name : "?").charAt(0).toUpperCase()}
                     p.mb-0.d-none.d-sm-block.navbar-profile-name #{user.name}
                     i.mdi.mdi-menu-down.d-none.d-sm-block
                 .dropdown-menu.dropdown-menu-right.navbar-dropdown.preview-list(aria-labelledby='profileDropdown')
@@ -134,7 +135,7 @@ html(lang='en')
                         .d-flex.align-items-center.align-self-start
                           h3(style='width: 100%; text-align: center; font-size: xx-large;')
                             | #{count}  
-                            mark(style='background:none;color: greenyellow;')  ta
+                            mark(style='background:none;color: #0b8f84;')  ta
                     h6.text-muted.font-weight-normal.text-center
                       b #{filter_count} 
                       |  ta
@@ -147,7 +148,7 @@ html(lang='en')
                       .col-6
                         .template-demo
                           .form-group
-                            label(for='exampleFormControlSelect1') Large select
+                            label(for='exampleFormControlSelect1') Filtr (hozircha faol emas)
                             select#exampleFormControlSelect1.form-control.form-control-lg
                               option 1
                               option 2
@@ -156,7 +157,7 @@ html(lang='en')
                               option 5
                       .col-6
                         .form-group
-                          label(for='exampleFormControlSelect1') Large select
+                          label(for='exampleFormControlSelect1') Filtr (hozircha faol emas)
                           select#exampleFormControlSelect1.form-control.form-control-lg
                             option 1
                             option 2
@@ -192,7 +193,7 @@ html(lang='en')
                             th  nomi 
                             th  pin kodi 
                             th  kaliti 
-                            th  Ammallar  
+                            th  Amallar  
                         tbody
                           - for (var x = 0; x < device.length; x++)
                             tr
