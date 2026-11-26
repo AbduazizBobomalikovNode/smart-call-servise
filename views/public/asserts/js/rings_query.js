@@ -71,12 +71,11 @@ function tasdiqlash(xabar, id, tbody, callback) {
         formData.forEach((value, key) => {
             jsonData[key] = value;
         });
-        if (jsonData.turn_off_after_work) {
-            if (jsonData.turn_off_after_work == "on") {
-                jsonData.turn_off_after_work = true;
-            }
-            jsonData.turn_off_after_work = false;
-        }
+        // firmware faqat butun son va boolean qabul qiladi
+        jsonData.turn_off_after_work = document.querySelector('#queryform [name="turn_off_after_work"]').checked;
+        ["call_duration", "call_delay", "count"].forEach(key => {
+            jsonData[key] = Number(jsonData[key]);
+        });
         jsonData.iddevice = parseInt(deviceid);
         jsonData.days = selectedDaysArray;
         let jsonString = JSON.stringify(jsonData);

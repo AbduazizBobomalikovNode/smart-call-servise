@@ -6,6 +6,7 @@ const router = express.Router();
 var db = require('../db/mongodb');
 var generateId = require('../resurs/functions/getid');
 const validate = require("../resurs/validate/ring");
+const { normalizeRing } = require('../resurs/functions/ringPayload');
 var auth = require("../middlewire/auth");
 var { receiveMqtt,mqtt_general } = require('../resurs/functions/send_recv_mqtt');
 
@@ -39,11 +40,11 @@ router.get('/get/all', auth, async (req, res) => {
 })
 
 router.post('/add', auth, async (req, res) => {
-    const { error } = validate(req.body, "add");
+    const { error, value } = validate(req.body, "add");
     if (error) {
         return res.status(400).send(error.details[0].message)
     }
-    let body = req.body;
+    let body = value;
     let ring_int = await (await db).ring.getRingForObj({ ...body });
     if (ring_int.length > 0) {
         return res.status(400).json({ error: 'ushbu  qiymatlar allaqachon kritilgan' });
@@ -65,7 +66,7 @@ router.post('/add', auth, async (req, res) => {
     }
     let message = {
         method:"add",
-        data:ring,
+        data:normalizeRing(ring),
         date: (new Date()).toDateString()
     }
     mqtt_general(db,'ring',url,req.user.name,req.user.idbroker,body.iddevice,message);
@@ -77,11 +78,11 @@ router.post('/add', auth, async (req, res) => {
 })
 
 router.put('/update/:id', auth, async (req, res) => {
-    const { error } = validate(req.body);
+    const { error, value } = validate(req.body);
     if (error) {
         return res.status(400).send(error.details[0].message)
     }
-    let body = req.body;
+    let body = value;
     let id = parseInt(req.params.id);
     console.log(body, id)
 
@@ -116,7 +117,7 @@ router.put('/update/:id', auth, async (req, res) => {
     }
     let message = {
         method:"update",
-        data:result,
+        data:normalizeRing(result),
         date: (new Date()).toDateString()
     }
     mqtt_general(db,'ring',url,req.user.name,req.user.idbroker,ring[0].iddevice,message);
