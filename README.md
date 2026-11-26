@@ -85,7 +85,7 @@ MQTT broker ──► ESP qurilma (tugma / qo'ng'iroq)
 1. Har bir **qurilma** (`device`) ESP plata. Unda PIN raqami, brokerdagi kaliti va Wi-Fi sozlamalari saqlanadi.
 2. Har bir **qo'ng'iroq** (`ring`) qurilmaga bog'langan bitta jadval yozuvi. Unda quyidagilar bor:
    - nomi va vaqti (`08:30`);
-   - hafta kunlari (1–6, ya'ni dushanbadan shanbagacha);
+   - hafta kunlari (1–7 butun sonlari, 1 = dushanba);
    - chalinish davomiyligi va oralig'i (soniya) hamda necha marta chalinishi;
    - faol yoki o'chiq holati.
 3. Jadval yoki sozlama o'zgarganda server o'zgarishni brokerga yuboradi (`resurs/functions/send_recv_mqtt.js`).
@@ -95,6 +95,27 @@ MQTT broker ──► ESP qurilma (tugma / qo'ng'iroq)
 4. Har bir muhim amal **harakatlar jurnali**ga (`action`) yoziladi: kim, qaysi bo'limda, nima qildi.
 
 Broker alohida repoda: [broker](https://github.com/AbduazizBobomalikovNode/broker). MQTT sozlanmagan bo'lsa ham panel ishlaydi, faqat qurilmaga xabar ketmaydi.
+
+### `ring` xabaridagi maydon turlari
+
+Qurilma proshivkasi ([smart-call-esp](https://github.com/AbduazizBobomalikovNode/smart-call-esp)) turni qat'iy tekshiradi va noto'g'ri turdagi jadvalni saqlamaydi. Shuning uchun server `add` va `update` xabarlarini `normalizeRing()` (`resurs/functions/ringPayload.js`) orqali yuboradi.
+
+| Maydon | Tur |
+|---|---|
+| `id`, `call_duration`, `call_delay`, `count` | butun son |
+| `turn_off_after_work`, `isactive` | boolean |
+| `name` | string, 3–50 belgi |
+| `time` | string (`08:30`) |
+| `days` | 1–7 butun sonlardan iborat massiv, 1–7 element |
+
+Avval forma raqamlarni string qilib yuborardi va server ularni o'zgartirmasdan MQTT'ga uzatardi. "Ishdan keyin o'chirish" belgisi esa doim `false` bo'lib qolardi. Natijada veb-paneldan qo'shilgan jadvallar qurilmada saqlanmasdi.
+
+Bazada eski string qiymatli yozuvlar qolgan bo'lsa, ularni bir marta o'giring:
+
+```bash
+URI_MONGO=... node scripts/migrate-ring-types.js           # faqat nechta yozuv o'zgarishini ko'rsatadi
+URI_MONGO=... node scripts/migrate-ring-types.js --apply   # yozadi
+```
 
 ### Rollar va ruxsatlar
 
@@ -116,6 +137,7 @@ npm ci
 
 cp .env.example .env      # qiymatlarni to'ldiring
 npm start                 # http://localhost:3000
+npm test                  # 10 ta unit test (node:test)
 ```
 
 | O'zgaruvchi | Majburiy | Nima uchun |
@@ -147,8 +169,10 @@ index.js                       server, routerlar va dashboard statistikasi
 routers/                       auth, user, role, task, device, rings, setings
 db/mongodb.js, db/tables/      MongoDB ulanishi va kolleksiya funksiyalari
 middlewire/auth.js             JWT va rol bo'yicha ruxsat tekshiruvi
-resurs/functions/              MQTT, sana formati, xatolar
+resurs/functions/              MQTT, sana formati, xatolar, ringPayload.js (maydon turlari)
 resurs/validate/               kiruvchi ma'lumot tekshiruvi (Joi)
+scripts/migrate-ring-types.js  bazadagi eski ring yozuvlarini to'g'ri turga o'girish
+test/                          node:test unit testlari
 views/public/                  Pug sahifalar va shablon assetlari
   assets/css/smartcall.css     yagona dizayn qatlami (barcha sahifalar uchun)
   assets/images/smartcall-*    logotip va favicon
@@ -159,7 +183,8 @@ docs/                          GitHub Pages sahifasi va README rasmlari
 
 - `socket.io`, `docxtemplater` va `qrcode` `package.json` da bor, lekin kodda ishlatilmaydi. DOCX hisobot moduli (`middlewire/document.js`) ulanmagan.
 - `/profil` sahifasida shablondan qolgan ikki JS xatosi bor (Tempus Dominus va `waypoint`). Sahifa ishlashiga ta'sir qilmaydi.
-- Avtomatik testlar yo'q.
+- Testlar faqat maydon turlarini (`normalizeRing`) va migratsiya konvertatsiyasini qamraydi. Ring yo'llari aedes broker va xotiradagi soxta baza bilan sinalgan. Haqiqiy MongoDB va broker bilan sinalmagan.
+- Migratsiya skripti haqiqiy bazada ishga tushirib ko'rilmagan. Avval `--apply` siz ishga tushiring.
 - `views/public/assets/images` da shablondan qolgan va hech qayerda ishlatilmaydigan ~150 ta demo rasm bor.
 
 ## Bog'liq loyihalar
